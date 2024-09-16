@@ -1,0 +1,416 @@
+<!DOCTYPE html>
+<!--[if lt IE 7]><html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en-US"> <![endif]-->
+<!--[if IE 7]><html class="no-js lt-ie9 lt-ie8" lang="en-US"> <![endif]-->
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en-US"> <![endif]-->
+<!--[if IE 9 ]><html class="ie9 no-js" lang="en-US"> <![endif]-->
+<!--[if (gt IE 9)|!(IE)]><!--> <html class="no-js" lang="en-US"> <!--<![endif]--> 
+    <head prefix="og: http://ogp.me/ns/website#">
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+        <meta name="apple-mobile-web-app-capable" content="yes">
+        <title>{{ page_title }}{% if current_tags %} | tagged "{{ current_tags | join: ', ' }}"{% endif %}{% if current_page != 1 %} (Page {{ current_page }}){% endif %}{% unless page_title contains shop.name %} | Shop | {{ shop.name }}{% endunless %}</title>
+        <link rel="apple-touch-icon" href="{{ 'icon.png' | asset_url }}">
+        <link rel="shortcut icon" href="{{ 'favicon.png' | asset_url }}">
+{% if page_description %}
+    {% if template contains 'index' %}
+
+        <meta name="description" content="Limited production, handmade handbags and wallets designed to express your uniquely beautiful personality and personal style.">
+
+    {% elsif page_description %}
+
+        <meta name="description" content="{{ product.description | newline_to_br | strip_html | truncatewords: 12, '' | escape  }}...discover this #UniquelyBeautiful item.">
+
+    {% else %}
+
+        <meta name="description" content="Limited production, handmade handbags and wallets designed to express your #UniquelyBeautiful personality and personal style.">
+
+    {% endif %}
+{% endif %}
+
+        <link rel="canonical" href="{{ canonical_url }}">
+{% include 'open-graph-tags' %}
+{% include 'twitter-card' %}
+{{ content_for_header }}
+{{ 'shopify_common.js' | shopify_asset_url | script_tag }}
+{% if template contains 'customers' %}  
+    {{ 'customer_area.js'  | shopify_asset_url | script_tag }}
+{% endif %}
+  
+<!-- Additional Shopify helpers that will likely be added to the global shopify_common.js some day soon. -->
+        {{ 'shopify_common.js'  | asset_url | script_tag }}
+
+        {{ 'option_selection.js' | shopify_asset_url | script_tag }}
+
+        <script>jQuery('html').removeClass('no-js').addClass('js');</script>
+        <link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Lato:100,300,900|Open+Sans:300,300italic,400,400italic,600,700,800|Vollkorn:400,700">
+        <link rel="stylesheet" href="{{ 'bootstrap.min.css' | asset_url }}">
+        <link rel="stylesheet" href="{{ 'flexslider-2.2.0.css' | asset_url }}">
+        <link rel="stylesheet" href="{{ 'style.min.css' | asset_url }}">
+        <script src="{{ 'react.min.js' | asset_url }}"></script>
+        <script src="{{ 'react-dom.min.js' | asset_url }}"></script>
+<!-- Begin Google Tag Manager -->
+        <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start': new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0], j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src='https://www.googletagmanager.com/gtm.js?id='+i+dl;f.parentNode.insertBefore(j,f); })(window,document,'script','dataLayer','GTM-K3HKXJ');</script>
+<!-- End Google Tag Manager -->
+    </head>
+
+
+
+
+    <body id="{{ page_title | handle }}" class="{% if customer %}customer-logged-in {% endif %}template-{{ template | replace: '.', ' ' | truncatewords: 1, '' | handle }}" >
+<!-- Begin Google Tag Manager (noscript) -->
+        <noscript><iframe src="https://www.googletagmanager.com/ns.html?id=GTM-K3HKXJ"height="0" width="0" style="display:none;visibility:hidden"></iframe></noscript>
+<!-- End Google Tag Manager (noscript) -->
+
+
+
+
+
+
+
+
+        <div id="sticky-header">
+            <section id="promo" class="promo-msg flexslider">
+                <ul class="slides">
+                    <li><p>30% off for orders $60 or more. Promo code <strong>HOLIDAY14</strong>. Offer ends 12/15.</p></li>
+                    <li><p><strong>Free shipping</strong> for orders shipped in the continental U.S.</p></li>
+                    <li><p>You are fearfully and wonderfully made. You are <strong>#UniquelyBeautiful</strong>!</p></li>
+                </ul>
+            </section>
+            <a href="/cart" title="You have {{ cart.item_count }} {{ cart.item_count | pluralize: 'item', 'items' }} ({{ cart.total_price | money }}) in your shopping bag." id="cart" class="hover-animation"><span class="qty">{{ cart.item_count }}</span></a>
+        </div>
+<!--/#sticky-header -->
+
+
+
+
+
+
+
+
+        <div class="padding-hack">&nbsp;</div>
+        <nav id="navbar" class="navbar-collapse collapse">
+            <ul>
+            {% for link in linklists.main-menu.links %}
+            {% assign has_sub_menu = false %}
+            {% assign has_sub_categories = false %}
+            {% assign parent_link_active = false %}
+            {% assign child_list_handle = link.title | handle %}
+            {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+            {% assign has_sub_menu = true %}
+            {% for l in linklists[child_list_handle].links %}
+            {% if page_title == l.title %}
+            {% assign parent_link_active = true %}
+            {% endif %}
+            {% endfor %}
+            {% elsif link.type == 'collection_link' and link.object.all_tags.size > 0 %}
+            {% assign has_sub_categories = true %}
+            {% endif %}
+            <li class="nav-item{% if forloop.first %} first{% elsif forloop.last %} last{% endif %}{% if link.active or parent_link_active %} active{% endif %}{% if has_sub_menu or has_sub_categories %} has-dropdown{% endif %}"><a href="{{ link.url }}" class="hover-animation">{{ link.title }}</a></li>
+            {% endfor %}
+            </ul>
+        </nav>
+<!--/.topnav -->
+
+
+
+
+
+
+
+
+        <header id="header">
+            <section id="acct" class="container">
+            <div class="navbar-default visible-xs">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar" aria-expanded="false" aria-controls="navbar">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            </button>
+            </div>
+            {% if shop.customer_accounts_enabled %}
+            {% if customer %}
+            Hello, <strong>{{ customer.first_name }}</strong> &nbsp;|&nbsp; <a href="/account">My Account</a> &nbsp;|&nbsp; {{ 'Log Out' | customer_logout_link }}
+            {% else %}
+            <a href="#" data-toggle="modal" data-target="#login-modal">Log in</a>,
+            {% if shop.customer_accounts_optional %}
+            <a href="#" data-toggle="modal" data-target="#register-modal">create an account</a>,
+            {% endif %}
+            or simply shop as our guest.
+            {% endif %}
+            {% endif %}
+            </section>
+
+
+            <section class="branding">
+                <a href="/"><img src="{{ 'logo-w-tagline-light-bg.png' | asset_url }}" alt="Pamela Kay | Hand made ~ like you" title="Pamela Kay | Hand made ~ like you" class="logo"></a>
+            </section>
+
+
+            <nav class="topnav hidden-xs">
+                <ul>
+{% for link in linklists.main-menu.links %}
+    {% assign has_sub_menu = false %}
+    {% assign has_sub_categories = false %}
+    {% assign parent_link_active = false %}
+    {% assign child_list_handle = link.title | handle %}
+    {% if linklists[child_list_handle] and linklists[child_list_handle].links.size > 0 %}
+        {% assign has_sub_menu = true %}
+        {% for l in linklists[child_list_handle].links %}
+            {% if page_title == l.title %}
+                {% assign parent_link_active = true %}
+            {% endif %}
+        {% endfor %}
+    {% elsif link.type == 'collection_link' and link.object.all_tags.size > 0 %}
+        {% assign has_sub_categories = true %}
+    {% endif %}
+
+          <li class="nav-item{% if forloop.first %} first{% elsif forloop.last %} last{% endif %}{% if link.active or parent_link_active %} active{% endif %}{% if has_sub_menu or has_sub_categories %} has-dropdown{% endif %}">{{ link.title | link_to: link.url }}</li>
+
+{% endfor %}
+                </ul>
+            </nav>
+        </header>
+<!--/body > #header -->
+
+
+
+
+
+
+
+
+        <div id="content" class="container">
+{% comment %}} We have a template file to render. That's what content_for_layout is for. {% endcomment %}
+{{ content_for_layout }}
+        </div>
+<!--/#content -->
+
+
+
+  
+
+
+
+
+        <footer id="footer">
+            <section class="search">
+                <div class="container">
+                    <h4>Can't find what you're looking for?</h4>
+                    
+                    <form action="/search" method="get" class="search-form right" role="search">
+                        <input name="q" type="search" id="search-field" placeholder="Type keywords like 'brown clutch'" value="{{ search.terms | escape }}">
+                        <input type="submit" id="search-submit" value="Search" class="hover-animation">
+                    </form>
+                </div>
+            </section><!--/.search -->
+
+
+            <section id="social" class="container">
+                <h3>Let's connect</h3>
+                <p>We delight in discovering all things <strong>#UniquelyBeautiful</strong>. We know you do too, and invite you to share the <strong>#ArtOfDiscovery</strong> &nbsp;with&nbsp;us.</p>
+                <ul>
+                    <li><a href="http://www.pinterest.com/bypamelakay/" target="_blank" onClick="_gaq.push(['_trackEvent', 'Social', 'Connect on Pinterest']);"><img src="{{ 'pinterest-icon.png' | asset_url }}" alt="Pinterest" title="Pinterest"></a></li>
+                    <li><a href="http://www.facebook.com/bypamelakay" target="_blank" onClick="_gaq.push(['_trackEvent', 'Social', 'Connect on Facebook']);"><img src="{{ 'facebook-icon.png' | asset_url }}" alt="Facebook" title="Facebook"></a></li>
+                    <li><a href="http://twitter.com/ByPamelaKay" target="_blank" onClick="_gaq.push(['_trackEvent', 'Social', 'Connect on Twitter']);"><img src="{{ 'twitter-icon.png' | asset_url }}" alt="Twitter" title="Twitter"></a></li>
+                    <li><a href="" target="_blank" onClick="_gaq.push(['_trackEvent', 'Social', 'Connect on Instagram']);"><img src="{{ 'google-plus-icon.png' | asset_url }}" alt="Instarag" title="Instagram"></a></li>
+                </ul>
+            </section>
+
+
+            <section id="brand-msg">
+                <a href="http://www.pamela-kay.com"><img src="{{ 'logo-w-tagline-light-bg.png' | asset_url }}" alt="Pamela Kay | Hand made ~ like you" title="Pamela Kay | Hand made ~ like you" class="logo"></a>
+
+                <p>Limited production, handmade handbags and wallets designed to express your <strong>#UniquelyBeautiful</strong> personality&nbsp;and&nbsp;personal&nbsp;style.</p>
+            </section>
+
+
+            <section id="tc">
+                <p>Copyright &copy; {{ "now" | date: "%Y" }} {{ shop.name }}. All&nbsp;rights&nbsp;reserved.</p>
+            </section>
+        </footer>
+<!--/body > #footer -->
+
+
+
+
+
+
+
+
+{% if shop.customer_accounts_enabled %}
+    {% if customer %}
+
+    {% else %}
+
+        <div id="login-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+          
+        {% form 'customer_login' %}
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+
+                        <h3 id="myModalLabel">Log in</h3>
+                    </div>
+
+
+                    <div class="modal-body">
+
+            {{ form.errors | default_errors }}
+
+                        <div class="form-group">
+                            <label for="customer_email">E-mail</label><sup class="required">*</sup>
+                            <input type="email" name="customer[email]">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="customer_password">Password</label><sup class="required">*</sup>
+                            <input type="password" name="customer[password]">
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <p class="required-legend"><sup class="required">*</sup> Required field</p>
+                        <button type="button" class="btn btn-default hover-animation" data-dismiss="modal">Cancel</button>
+                        <input type="submit" value="Log In" class="btn btn-primary hover-animation">
+                    </div>
+        {% endform %}
+                </div>
+            </div>
+        </div>
+<!--/#login-modal -->
+
+
+
+
+
+
+
+
+        <div id="register-modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+
+        {% form 'create_customer' %}
+
+                    <div class="modal-header">
+                        <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+                        <h3 id="myModalLabel">Create an account</h3>
+                    </div>
+
+
+                    <div class="modal-body">
+
+            {{ form.errors | default_errors }}
+
+                        <div class="form-group">
+                            <label for="first_name">First Name</label>
+                            <input type="text" value="" name="customer[first_name]">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="last_name">Last Name</label>
+                            <input type="text" value="" name="customer[last_name]">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="email">E-mail</label><sup class="required">*</sup>
+                            <input type="email" value="" name="customer[email]" size="30">
+                        </div>
+
+
+                        <div class="form-group">
+                            <label for="password">Password</label><sup class="required">Required</sup>
+                            <input type="password" value="" name="customer[password]" size="30">  
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-default hover-animation" data-dismiss="modal">Cancel</button>
+                        <input type="submit" value="Create" class="btn btn-primary hover-animation">
+                    </div>
+        {% endform %}
+
+                </div>
+            </div>
+        </div>
+<!--/#register-modal -->
+    {% endif %}
+
+
+
+
+
+
+
+
+{% endif %}
+
+        <script async src="//assets.pinterest.com/js/pinit.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-route.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.3.2/angular-animate.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+        <script src="//ajax.googleapis.com/ajax/libs/jqueryui/1.11.2/jquery-ui.min.js"></script>
+        <script src="{{ 'bootstrap-3.3.1.js' | asset_url }}"></script>
+        <script src="{{ 'jquery.flexslider-2.2.2.min.js' | asset_url }}"></script>
+        <script src="{{ 'app.js' | asset_url }}"></script>
+        <script src="{{ 'shop.js' | asset_url }}"></script>
+        <script>
+            $(document).ready(function() {
+                $('.promo-msg').flexslider({
+                    animation: "slide",
+                    controlNav: false,
+                    direction: "vertical",
+                    directionNav: false,
+                    keyboard: false,
+                    randomize: true,
+                    reverse: false,
+                    slideshowSpeed: 6000,
+                    touch: false
+                });
+
+{% if template contains 'product' %}
+
+                $('.product-photos').flexslider({
+                    animation: "slide",
+                    controlNav: "thumbnails",
+                    directionNav: false,
+                    keyboard: true
+                });
+
+{% endif %}
+{% if template contains 'search' %}
+
+                $('.search h4').each(function() {
+                    var text = $(this).text();
+                    $(this).text(text.replace("Can't find what you're looking for?", "Still can't find what you're looking for? Please try again.")); 
+                });
+                
+{% endif %}
+                
+            });
+            $(window).resize(function(){
+
+{% if template contains 'index' %}
+
+                $('.content-cell').each(function() {
+                    $(this).height($(this).width());
+                });
+                $('.home-grid').each(function() {
+                    $(this).height($(this).width());
+                });
+
+{% endif %}
+
+            }).resize();
+        </script>
+    </body>
+</html>
